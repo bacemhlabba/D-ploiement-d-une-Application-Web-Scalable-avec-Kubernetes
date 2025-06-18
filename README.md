@@ -1,264 +1,264 @@
-# Kubernetes Scalable Web Application
+# Application Web Kubernetes Évolutive
 
-A production-ready full-stack web application demonstrating containerization with Docker and orchestration with Kubernetes, featuring auto-scaling, persistent data storage, and comprehensive deployment automation.
+Une application web full-stack prête pour la production démontrant la conteneurisation avec Docker et l'orchestration avec Kubernetes, avec mise à l'échelle automatique, stockage de données persistant et automatisation complète du déploiement.
 
 ## 🏗️ Architecture
 
-- **Frontend**: React application (nginx-served, port 8080)
-- **Backend**: Node.js API server with health checks (port 3000) 
-- **Database**: PostgreSQL with persistent storage and StatefulSet
-- **Orchestration**: Kubernetes with HPA (Horizontal Pod Autoscaler)
-- **Scaling**: Auto-scaling based on CPU utilization (50% threshold, 2-10 replicas)
+- **Frontend**: Application React (servie par nginx, port 8080)
+- **Backend**: Serveur API Node.js avec vérifications de santé (port 3000) 
+- **Base de données**: PostgreSQL avec stockage persistant et StatefulSet
+- **Orchestration**: Kubernetes avec HPA (Horizontal Pod Autoscaler)
+- **Mise à l'échelle**: Auto-scaling basé sur l'utilisation CPU (seuil 50%, 2-10 répliques)
 
-## 🚀 Quick Start
+## 🚀 Démarrage Rapide
 
-### Prerequisites
+### Prérequis
 
-- Docker installed and running
-- Minikube installed and configured  
-- kubectl installed and configured
+- Docker installé et en cours d'exécution
+- Minikube installé et configuré  
+- kubectl installé et configuré
 
-### One-Command Deployment
+### Déploiement en Une Commande
 
 ```bash
 ./deploy.sh
 ```
 
-This script will:
-1. Start Minikube cluster
-2. Build Docker images with optimized network configuration
-3. Load images into Minikube environment
-4. Deploy all Kubernetes resources with proper namespace isolation
-5. Initialize PostgreSQL database with schema
-6. Start persistent port-forwarding in background with nohup
-7. Verify all pods are healthy and ready
-8. Configure nginx proxy for frontend-backend communication
+Ce script va :
+1. Démarrer le cluster Minikube
+2. Construire les images Docker avec une configuration réseau optimisée
+3. Charger les images dans l'environnement Minikube
+4. Déployer toutes les ressources Kubernetes avec isolation des espaces de noms
+5. Initialiser la base de données PostgreSQL avec le schéma
+6. Démarrer le port-forwarding persistant en arrière-plan avec nohup
+7. Vérifier que tous les pods sont sains et prêts
+8. Configurer le proxy nginx pour la communication frontend-backend
 
-### Access Your Application
+### Accédez à Votre Application
 
-After deployment, access your application at:
+Après le déploiement, accédez à votre application à :
 
 ```bash
-# Frontend (React app with backend integration)
+# Frontend (Application React avec intégration backend)
 http://localhost:8080
 
-# Backend API (with database connectivity)
+# API Backend (avec connectivité base de données)
 http://localhost:3000/api
 
-# Backend Health Check
+# Vérification de Santé Backend
 http://localhost:3000/api/health
 ```
 
-## 📁 Project Structure
+## 📁 Structure du Projet
 
 ```
 k8s-scalable-app/
-├── deploy.sh              # Complete deployment automation
-├── port-forward.sh         # Port-forwarding management
-├── status.sh              # Deployment status checker  
-├── stop.sh                # Cleanup script
-├── load-test.sh           # Load testing for HPA
+├── deploy.sh              # Automatisation complète du déploiement
+├── port-forward.sh         # Gestion du port-forwarding
+├── status.sh              # Vérificateur de statut du déploiement  
+├── stop.sh                # Script de nettoyage
+├── load-test.sh           # Test de charge pour HPA
 ├── frontend/
-│   ├── Dockerfile         # Multi-stage React build
-│   ├── nginx.conf         # Custom nginx config (port 8080)
-│   └── src/               # React source code
+│   ├── Dockerfile         # Construction React multi-étapes
+│   ├── nginx.conf         # Configuration nginx personnalisée (port 8080)
+│   └── src/               # Code source React
 ├── backend/
-│   ├── Dockerfile         # Node.js API server
+│   ├── Dockerfile         # Serveur API Node.js
 │   └── src/
-│       └── index.js       # Express server with DB connection
+│       └── index.js       # Serveur Express avec connexion DB
 ├── database/
 │   └── init-scripts/
-│       └── init.sql       # Database schema
+│       └── init.sql       # Schéma de base de données
 ├── k8s/
-│   ├── namespace.yaml     # Isolated namespace
-│   ├── secret-db.yaml     # Database credentials
-│   ├── statefulset-db.yaml# PostgreSQL with persistent storage
-│   ├── deployment-*.yaml  # App deployments
-│   ├── service-*.yaml     # Service definitions
+│   ├── namespace.yaml     # Espace de noms isolé
+│   ├── secret-db.yaml     # Identifiants de base de données
+│   ├── statefulset-db.yaml# PostgreSQL avec stockage persistant
+│   ├── deployment-*.yaml  # Déploiements d'applications
+│   ├── service-*.yaml     # Définitions de services
 │   ├── hpa-backend.yaml   # Horizontal Pod Autoscaler
-│   └── ingress.yaml       # Ingress configuration
-└── docs/                  # Additional documentation
+│   └── ingress.yaml       # Configuration Ingress
+└── docs/                  # Documentation supplémentaire
 ```
 
-## 🎯 Management Commands
+## 🎯 Commandes de Gestion
 
-### Deployment Management
+### Gestion du Déploiement
 ```bash
-# Full deployment
+# Déploiement complet
 ./deploy.sh
 
-# Check status  
+# Vérifier le statut  
 ./status.sh
 
-# Stop everything
+# Tout arrêter
 ./stop.sh
 ```
 
-### Port-Forwarding Management
+### Gestion du Port-Forwarding
 ```bash
-# Start port-forwarding
+# Démarrer le port-forwarding
 ./port-forward.sh start
 
-# Check status
+# Vérifier le statut
 ./port-forward.sh status
 
-# Restart port-forwarding
+# Redémarrer le port-forwarding
 ./port-forward.sh restart
 
-# Stop port-forwarding
+# Arrêter le port-forwarding
 ./port-forward.sh stop
 ```
 
-### Scaling Operations
+### Opérations de Mise à l'Échelle
 ```bash
-# Manual scaling
+# Mise à l'échelle manuelle
 kubectl scale deployment backend --replicas=5 -n scalable-app
 kubectl scale deployment frontend --replicas=3 -n scalable-app
 
-# Trigger auto-scaling with load test
+# Déclencher l'auto-scaling avec test de charge
 ./load-test.sh
 
-# Monitor HPA
+# Surveiller HPA
 kubectl get hpa -n scalable-app -w
 ```
 
-### Database Operations
+### Opérations de Base de Données
 ```bash
-# Connect to database
+# Se connecter à la base de données
 kubectl exec -it db-0 -n scalable-app -- psql -U postgres -d scalable_app
 
-# Initialize schema (if needed)
+# Initialiser le schéma (si nécessaire)
 kubectl exec -it db-0 -n scalable-app -- psql -U postgres -c "CREATE DATABASE scalable_app;"
 ```
 
-## 🔍 Monitoring & Debugging
+## 🔍 Surveillance et Débogage
 
-### Pod Status and Logs
+### Statut des Pods et Logs
 ```bash
-# View all resources
+# Voir toutes les ressources
 kubectl get all -n scalable-app
 
-# View pod logs
+# Voir les logs des pods
 kubectl logs -f deployment/backend -n scalable-app
 kubectl logs -f deployment/frontend -n scalable-app
 
-# Describe problematic pods
-kubectl describe pod <pod-name> -n scalable-app
+# Décrire les pods problématiques
+kubectl describe pod <nom-pod> -n scalable-app
 ```
 
-### Health Checks
+### Vérifications de Santé
 ```bash
-# Backend health
+# Santé du backend
 curl http://localhost:3000/api
 
-# Frontend accessibility  
+# Accessibilité du frontend  
 curl -I http://localhost:8080
 
-# Database connectivity (via backend)
+# Connectivité base de données (via backend)
 curl -s http://localhost:3000/api | jq '.database'
 ```
 
-### Performance Testing
+### Tests de Performance
 ```bash
-# Generate load for auto-scaling
+# Générer de la charge pour l'auto-scaling
 ./load-test.sh
 
-# Watch scaling in action
+# Observer la mise à l'échelle en action
 kubectl get hpa -n scalable-app -w
 kubectl get pods -n scalable-app -w
 ```
 
-## 🛠️ Technical Features
+## 🛠️ Fonctionnalités Techniques
 
-### Docker Optimizations
-- Multi-stage builds for minimal image sizes
-- Host network mode for DNS resolution during builds
-- Local image caching with `imagePullPolicy: Never`
-- Nginx proxy configuration for frontend-backend communication
-- Proper port mapping (frontend: 8080, backend: 3000, database: 5432)
+### Optimisations Docker
+- Constructions multi-étapes pour des tailles d'images minimales
+- Mode réseau hôte pour la résolution DNS pendant les constructions
+- Cache d'images local avec `imagePullPolicy: Never`
+- Configuration de proxy nginx pour la communication frontend-backend
+- Mappage de ports approprié (frontend: 8080, backend: 3000, base de données: 5432)
 
-### Kubernetes Features
-- Namespace isolation (`scalable-app`)
-- StatefulSet for database persistence
-- HPA for automatic scaling (CPU-based)
-- Service mesh ready configuration
-- Resource limits and requests
-- Health check endpoints
+### Fonctionnalités Kubernetes
+- Isolation des espaces de noms (`scalable-app`)
+- StatefulSet pour la persistance de la base de données
+- HPA pour la mise à l'échelle automatique (basée sur le CPU)
+- Configuration prête pour le service mesh
+- Limites et demandes de ressources
+- Points de terminaison de vérification de santé
 
-### Development Features
-- Persistent port-forwarding with nohup
-- Comprehensive status monitoring
-- Automated load testing
-- One-command deployment and cleanup
-- Error handling and recovery scripts
+### Fonctionnalités de Développement
+- Port-forwarding persistant avec nohup
+- Surveillance complète du statut
+- Tests de charge automatisés
+- Déploiement et nettoyage en une commande
+- Scripts de gestion et de récupération d'erreurs
 
-## 🚨 Troubleshooting
+## 🚨 Dépannage
 
-### Common Issues
+### Problèmes Courants
 
-**Frontend shows "Error connecting to backend":**
+**Le frontend affiche "Erreur de connexion au backend" :**
 ```bash
-# Rebuild React app and update containers
+# Reconstruire l'application React et mettre à jour les conteneurs
 cd frontend && npm run build
-kubectl cp build/. frontend-pod-name:/usr/share/nginx/html/ -n scalable-app
-# Update all frontend pods with the new build
+kubectl cp build/. nom-pod-frontend:/usr/share/nginx/html/ -n scalable-app
+# Mettre à jour tous les pods frontend avec la nouvelle construction
 ```
 
-**Port-forwarding not working:**
+**Le port-forwarding ne fonctionne pas :**
 ```bash
 ./port-forward.sh restart
 ```
 
-**Pods not starting:**
+**Les pods ne démarrent pas :**
 ```bash
-kubectl describe pod <pod-name> -n scalable-app
-kubectl logs <pod-name> -n scalable-app
+kubectl describe pod <nom-pod> -n scalable-app
+kubectl logs <nom-pod> -n scalable-app
 ```
 
-**Database connection issues:**
+**Problèmes de connexion à la base de données :**
 ```bash
 kubectl exec -it db-0 -n scalable-app -- psql -U postgres -l
 ```
 
-**Nginx proxy not working:**
+**Le proxy nginx ne fonctionne pas :**
 ```bash
-# Check nginx configuration in frontend pods
+# Vérifier la configuration nginx dans les pods frontend
 kubectl exec deployment/frontend -n scalable-app -- cat /etc/nginx/conf.d/default.conf
-# Manually update nginx config if needed
+# Mettre à jour manuellement la configuration nginx si nécessaire
 kubectl exec deployment/frontend -n scalable-app -- nginx -s reload
 ```
 
-**HPA not scaling:**
+**HPA ne met pas à l'échelle :**
 ```bash
-# Check metrics server
+# Vérifier le serveur de métriques
 kubectl get pods -n kube-system | grep metrics-server
-# Generate more load
+# Générer plus de charge
 ./load-test.sh
 ```
 
-### Reset Everything
+### Tout Réinitialiser
 ```bash
-./stop.sh  # Choose to delete all resources
+./stop.sh  # Choisir de supprimer toutes les ressources
 minikube delete
 minikube start --driver=docker
 ./deploy.sh
 ```
 
-## 📈 Production Considerations
+## 📈 Considérations de Production
 
-This setup demonstrates key production patterns:
+Cette configuration démontre des modèles clés de production :
 
-- **High Availability**: Multiple replicas with auto-scaling
-- **Persistent Storage**: StatefulSet with persistent volumes
-- **Health Monitoring**: Liveness and readiness probes
-- **Resource Management**: CPU/memory limits and requests
-- **Security**: Namespace isolation and secret management
-- **Observability**: Comprehensive logging and monitoring setup
+- **Haute Disponibilité** : Plusieurs répliques avec auto-scaling
+- **Stockage Persistant** : StatefulSet avec volumes persistants
+- **Surveillance de Santé** : Sondes de vivacité et de préparation
+- **Gestion des Ressources** : Limites et demandes CPU/mémoire
+- **Sécurité** : Isolation des espaces de noms et gestion des secrets
+- **Observabilité** : Configuration complète de logs et de surveillance
 
-## 🤝 Contributing
+## 🤝 Contribution
 
-Feel free to submit issues and enhancement requests!
+N'hésitez pas à soumettre des issues et des demandes d'amélioration !
 
-## 📄 License
+## 📄 Licence
 
-This project is licensed under the MIT License.
+Ce projet est sous licence MIT.

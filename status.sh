@@ -1,64 +1,64 @@
 #!/bin/bash
-# Status script for k8s-scalable-app
+# Script de statut pour k8s-scalable-app
 
-echo "📊 k8s-scalable-app Status Report"
-echo "================================="
+echo "📊 Rapport de Statut k8s-scalable-app"
+echo "===================================="
 
-# Check Minikube status
-echo "🐳 Minikube Status:"
+# Vérifier le statut de Minikube
+echo "🐳 Statut Minikube :"
 minikube status
 echo ""
 
-# Check if namespace exists
+# Vérifier si l'espace de noms existe
 if kubectl get namespace scalable-app >/dev/null 2>&1; then
-    echo "📦 Kubernetes Resources in scalable-app namespace:"
+    echo "📦 Ressources Kubernetes dans l'espace de noms scalable-app :"
     kubectl get all -n scalable-app
     echo ""
     
-    echo "📊 Resource Details:"
-    echo "Pods:"
+    echo "📊 Détails des Ressources :"
+    echo "Pods :"
     kubectl get pods -n scalable-app -o wide
     echo ""
     
-    echo "Services:"
+    echo "Services :"
     kubectl get svc -n scalable-app -o wide
     echo ""
     
-    echo "HPA Status:"
+    echo "Statut HPA :"
     kubectl get hpa -n scalable-app
     echo ""
     
-    # Check pod health
-    echo "🏥 Pod Health Check:"
-    kubectl get pods -n scalable-app --field-selector=status.phase!=Running 2>/dev/null | tail -n +2 | wc -l | xargs -I {} echo "Unhealthy pods: {}"
+    # Vérifier la santé des pods
+    echo "🏥 Vérification de Santé des Pods :"
+    kubectl get pods -n scalable-app --field-selector=status.phase!=Running 2>/dev/null | tail -n +2 | wc -l | xargs -I {} echo "Pods non sains : {}"
     
-    # Check port-forwarding processes
-    echo "🌐 Port-forwarding Status:"
+    # Vérifier les processus de port-forwarding
+    echo "🌐 Statut du Port-forwarding :"
     if pgrep -f "kubectl port-forward service/frontend" >/dev/null; then
-        echo "   ✅ Frontend port-forward (8080) is running"
+        echo "   ✅ Port-forward frontend (8080) en cours d'exécution"
     else
-        echo "   ❌ Frontend port-forward is not running"
+        echo "   ❌ Port-forward frontend ne fonctionne pas"
     fi
     
     if pgrep -f "kubectl port-forward service/backend" >/dev/null; then
-        echo "   ✅ Backend port-forward (3000) is running"
+        echo "   ✅ Port-forward backend (3000) en cours d'exécution"
     else
-        echo "   ❌ Backend port-forward is not running"
+        echo "   ❌ Port-forward backend ne fonctionne pas"
     fi
     
     echo ""
-    echo "🌐 Access URLs:"
-    echo "   Frontend: http://localhost:8080"
-    echo "   Backend:  http://localhost:3000/api"
-    echo "   Health:   http://localhost:3000/api/health"
+    echo "🌐 URLs d'Accès :"
+    echo "   Frontend : http://localhost:8080"
+    echo "   Backend : http://localhost:3000/api"
+    echo "   Santé : http://localhost:3000/api/health"
     
 else
-    echo "❌ scalable-app namespace not found. Run ./deploy.sh first."
+    echo "❌ Espace de noms scalable-app introuvable. Exécutez ./deploy.sh d'abord."
 fi
 
 echo ""
-echo "📋 Quick Actions:"
-echo "   Start port-forwarding: kubectl port-forward service/frontend 8080:80 -n scalable-app &"
-echo "   Stop all port-forwards: pkill -f 'kubectl port-forward'"
-echo "   Scale backend: kubectl scale deployment backend --replicas=N -n scalable-app"
-echo "   View logs: kubectl logs -f deployment/backend -n scalable-app"
+echo "📋 Actions Rapides :"
+echo "   Démarrer port-forwarding : kubectl port-forward service/frontend 8080:80 -n scalable-app &"
+echo "   Arrêter tous les port-forwards : pkill -f 'kubectl port-forward'"
+echo "   Mettre à l'échelle le backend : kubectl scale deployment backend --replicas=N -n scalable-app"
+echo "   Voir les logs : kubectl logs -f deployment/backend -n scalable-app"

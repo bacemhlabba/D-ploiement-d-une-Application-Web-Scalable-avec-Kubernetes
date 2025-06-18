@@ -9,14 +9,14 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Use relative path for API calls - nginx will proxy to backend service
-        // This works both in development (with proxy) and production (with nginx proxy)
-        console.log('Attempting to connect to backend via proxy at: /api');
+        // Utiliser un chemin relatif pour les appels API - nginx va faire le proxy vers le service backend
+        // Cela fonctionne à la fois en développement (avec proxy) et en production (avec proxy nginx)
+        console.log('Tentative de connexion au backend via proxy à : /api');
         const response = await axios.get('/api');
         setData(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setData({ message: 'Error connecting to backend', error: error.message });
+        console.error('Erreur lors de la récupération des données :', error);
+        setData({ message: 'Erreur de connexion au backend', error: error.message });
       } finally {
         setLoading(false);
       }
@@ -28,13 +28,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Kubernetes Scalable Web Application</h1>
+        <h1>Application Web Kubernetes Évolutive</h1>
         <div className="content">
           {loading ? (
-            <p>Loading...</p>
+            <p>Chargement...</p>
           ) : (
             <div>
-              <h2>Backend Response:</h2>
+              <h2>Réponse du Backend :</h2>
               <pre>{JSON.stringify(data, null, 2)}</pre>
             </div>
           )}

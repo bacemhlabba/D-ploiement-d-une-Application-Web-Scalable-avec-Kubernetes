@@ -10,7 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Database connection
+// Connexion à la base de données
 const pool = new Pool({
   host: process.env.DB_HOST || 'db',
   port: process.env.DB_PORT || 5432,
@@ -19,21 +19,21 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'scalable_app'
 });
 
-// Health check endpoint
+// Point de terminaison de vérification de santé
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Main API endpoint
+// Point de terminaison API principal
 app.get('/api', async (req, res) => {
   try {
-    // Test database connection
+    // Tester la connexion à la base de données
     const client = await pool.connect();
     const result = await client.query('SELECT NOW() as current_time, version() as pg_version');
     client.release();
     
     res.json({
-      message: 'Backend API is running!',
+      message: 'API Backend fonctionne !',
       hostname: require('os').hostname(),
       timestamp: new Date().toISOString(),
       database: {
@@ -43,9 +43,9 @@ app.get('/api', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Database connection error:', error);
+    console.error('Erreur de connexion à la base de données :', error);
     res.json({
-      message: 'Backend API is running!',
+      message: 'API Backend fonctionne !',
       hostname: require('os').hostname(),
       timestamp: new Date().toISOString(),
       database: {
@@ -56,7 +56,7 @@ app.get('/api', async (req, res) => {
   }
 });
 
-// Sample data endpoint for load testing
+// Point de terminaison de données d'exemple pour les tests de charge
 app.get('/api/data', async (req, res) => {
   try {
     const client = await pool.connect();
@@ -64,7 +64,7 @@ app.get('/api/data', async (req, res) => {
     client.release();
     
     res.json({
-      data: 'Sample data for load testing',
+      data: 'Données d\'exemple pour test de charge',
       timestamp: new Date().toISOString(),
       hostname: require('os').hostname(),
       random: Math.random(),
@@ -72,7 +72,7 @@ app.get('/api/data', async (req, res) => {
     });
   } catch (error) {
     res.json({
-      data: 'Sample data for load testing',
+      data: 'Données d\'exemple pour test de charge',
       timestamp: new Date().toISOString(),
       hostname: require('os').hostname(),
       random: Math.random(),
@@ -82,6 +82,6 @@ app.get('/api/data', async (req, res) => {
 });
 
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Backend server running on port ${port}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Serveur backend fonctionnant sur le port ${port}`);
+  console.log(`Environnement : ${process.env.NODE_ENV || 'development'}`);
 });

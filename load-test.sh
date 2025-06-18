@@ -1,24 +1,24 @@
 #!/bin/bash
-echo "Starting load test on backend service..."
-echo "This will generate load to trigger the Horizontal Pod Autoscaler"
+echo "Démarrage du test de charge sur le service backend..."
+echo "Cela va générer de la charge pour déclencher le Horizontal Pod Autoscaler"
 
-# Counter for requests
+# Compteur pour les requêtes
 count=0
 
 while true; do
-    # Make concurrent requests to stress the backend
+    # Faire des requêtes simultanées pour stresser le backend
     for i in {1..10}; do
         curl -s http://localhost:3000/api > /dev/null &
     done
     
     count=$((count + 10))
-    echo "Sent $count requests..."
+    echo "Envoyé $count requêtes..."
     
-    # Check every 100 requests
+    # Vérifier toutes les 100 requêtes
     if [ $((count % 100)) -eq 0 ]; then
-        echo "--- HPA Status ---"
+        echo "--- Statut HPA ---"
         kubectl get hpa -n scalable-app
-        echo "--- Pod Status ---"
+        echo "--- Statut des Pods ---"
         kubectl get pods -n scalable-app | grep backend
         echo ""
     fi

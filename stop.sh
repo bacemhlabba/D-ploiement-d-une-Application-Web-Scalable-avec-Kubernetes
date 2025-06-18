@@ -1,31 +1,31 @@
 #!/bin/bash
-# Stop script for k8s-scalable-app
+# Script d'arrêt pour k8s-scalable-app
 
-echo "🛑 Stopping k8s-scalable-app deployment..."
+echo "🛑 Arrêt du déploiement k8s-scalable-app..."
 
-# Stop all port-forwarding processes
-echo "📋 Stopping port-forwarding processes..."
+# Arrêter tous les processus de port-forwarding
+echo "📋 Arrêt des processus de port-forwarding..."
 pkill -f "kubectl port-forward service/frontend"
 pkill -f "kubectl port-forward service/backend"
 
-# Clean up log files
-echo "📋 Cleaning up log files..."
+# Nettoyer les fichiers de logs
+echo "📋 Nettoyage des fichiers de logs..."
 rm -f frontend-port-forward.log backend-port-forward.log
 
-# Option to delete Kubernetes resources
-read -p "Do you want to delete all Kubernetes resources? (y/N): " -n 1 -r
+# Option pour supprimer les ressources Kubernetes
+read -p "Voulez-vous supprimer toutes les ressources Kubernetes ? (y/N) : " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "📋 Deleting Kubernetes resources..."
+    echo "📋 Suppression des ressources Kubernetes..."
     kubectl delete namespace scalable-app
 fi
 
-# Option to stop Minikube
-read -p "Do you want to stop Minikube? (y/N): " -n 1 -r
+# Option pour arrêter Minikube
+read -p "Voulez-vous arrêter Minikube ? (y/N) : " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "📋 Stopping Minikube..."
+    echo "📋 Arrêt de Minikube..."
     minikube stop
 fi
 
-echo "✅ Cleanup complete!"
+echo "✅ Nettoyage terminé !"
