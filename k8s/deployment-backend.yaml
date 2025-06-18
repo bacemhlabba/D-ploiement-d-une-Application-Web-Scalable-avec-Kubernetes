@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: backend:latest
+        image: backend:v2
         imagePullPolicy: Never
         env:
         - name: DB_HOST
