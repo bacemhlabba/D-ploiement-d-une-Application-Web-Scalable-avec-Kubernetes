@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    image: backend:latest
+    container_name: backend-app
+    environment:
+      - PORT=3000
+      - DB_HOST=localhost
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=scalable_app
+    network_mode: host
+    restart: unless-stopped
+
+  frontend:
+    image: frontend:latest
+    container_name: frontend-app
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - backend
