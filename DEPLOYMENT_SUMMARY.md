@@ -1,5 +1,24 @@
 # 🚀 Application Kubernetes Évolutive - Résumé du Déploiement
 
+## 🔄 Mises à Jour (19 Juin 2025)
+
+### **Mises à Jour Principales**
+- ✅ **Migration DB** : Mise à jour complète de MySQL vers PostgreSQL
+- ✅ **Backend** : Mise à jour de l'image backend avec connectivité PostgreSQL
+- ✅ **Frontend** : Mise à jour de l'image frontend et configuration nginx
+- ✅ **Dockerfiles** : Ajout de Dockerfiles optimisés pour les services
+- ✅ **docker-compose.yml** : Mise à jour pour refléter la nouvelle architecture
+- ✅ **Kubernetes** : Mise à jour des déploiements avec health checks
+
+### **Corrections d'Erreurs**
+- 🛠️ **Next.js Config** : Correction configuration `outputFileTracingRoot`
+- 🛠️ **Modules Backend** : Ajout des modules manquants pour l'API frontend
+- 🛠️ **Optimisation Docker** : Amélioration des étapes de build pour réduire les erreurs
+- 🛠️ **Modèles Leave** : Ajout des modèles manquants (leaveBalance, leaveRequest, leaveType)
+- 🛠️ **CI/CD** : Résolution du problème de build de l'image frontend
+- 🛠️ **Gestion des Dépendances** : Mise à jour du Dockerfile pour résoudre les problèmes d'installation de bcryptjs
+- 🛠️ **API Middleware** : Implémentation des fonctions manquantes (withAuth, isHR, authenticateUser)
+
 ## ✅ Terminé avec Succès
 
 ### **Phase de Conteneurisation**

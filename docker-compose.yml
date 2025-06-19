@@ -1,23 +1,47 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:15
+    container_name: db-app
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=scalable_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
   backend:
     image: backend:latest
     container_name: backend-app
+    build:
+      context: ./backend
     environment:
       - PORT=3000
-      - DB_HOST=localhost
+      - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=postgres
-      - DB_PASSWORD=password
+      - DB_PASSWORD=secret
       - DB_NAME=scalable_app
-    network_mode: host
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
     restart: unless-stopped
 
   frontend:
     image: frontend:latest
     container_name: frontend-app
-    network_mode: host
+    build:
+      context: ./frontend
+    ports:
+      - "8080:8080"
     restart: unless-stopped
     depends_on:
       - backend
+
+volumes:
+  postgres_data:

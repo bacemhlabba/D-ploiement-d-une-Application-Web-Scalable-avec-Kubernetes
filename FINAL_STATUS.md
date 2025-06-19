@@ -1,5 +1,13 @@
 # 🎉 Application Kubernetes Évolutive - ENTIÈREMENT OPÉRATIONNELLE
 
+## 🔄 **MISE À JOUR IMPORTANTE EFFECTUÉE (19 Juin 2025)**
+- ✅ **Migration vers PostgreSQL**: Mise à jour réussie de MySQL vers PostgreSQL
+- ✅ **Mise à jour Backend**: Scripts de connexion et API mis à jour pour PostgreSQL
+- ✅ **Mise à jour Frontend**: Dépendances mises à jour pour PostgreSQL
+- ✅ **Dockerfiles**: Ajout de Dockerfiles optimisés pour les services
+- ✅ **Health Checks**: Ajout de probes readiness et liveness
+- ✅ **Documentation**: Mise à jour des instructions de déploiement
+
 ## ✅ **DÉPLOIEMENT TERMINÉ & TESTÉ**
 
 ### **Problèmes Résolus avec Succès**

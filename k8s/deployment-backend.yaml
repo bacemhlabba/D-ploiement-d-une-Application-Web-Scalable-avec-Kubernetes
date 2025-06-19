@@ -15,11 +15,13 @@ spec:
     spec:
       containers:
       - name: api
-        image: backend:v2
+        image: backend:latest
         imagePullPolicy: Never
         env:
         - name: DB_HOST
           value: db.scalable-app.svc.cluster.local
+        - name: DB_PORT
+          value: "5432"
         - name: DB_USER
           valueFrom:
             secretKeyRef:
@@ -30,5 +32,22 @@ spec:
             secretKeyRef:
               name: db-credentials
               key: POSTGRES_PASSWORD
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_DB
         ports:
         - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 20

@@ -39,8 +39,8 @@ echo ""
 echo "🌐 Démarrage des services de port-forwarding..."
 
 # Démarrer le port-forwarding en arrière-plan avec nohup
-echo "Démarrage du port-forward frontend (8080:80)..."
-nohup kubectl port-forward service/frontend 8080:80 -n scalable-app > frontend-port-forward.log 2>&1 &
+echo "Démarrage du port-forward frontend (8080:8080)..."
+nohup kubectl port-forward service/frontend 8080:8080 -n scalable-app > frontend-port-forward.log 2>&1 &
 FRONTEND_PF_PID=$!
 
 echo "Démarrage du port-forward backend (3000:3000)..."
