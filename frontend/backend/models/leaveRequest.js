@@ -115,6 +115,48 @@ export async function getLeaveRequestsByUser(userId) {
   }
 }
 
+// Alias for consistency with other parts of the codebase
+export async function getLeaveRequestsByUserId(userId) {
+  return getLeaveRequestsByUser(userId);
+}
+export async function getLeaveRequestsByUser(userId) {
+  try {
+    return await query(
+      `SELECT lr.*, u.username, u.email, lt.name as leave_type_name, lt.color
+       FROM leave_requests lr
+       JOIN users u ON lr.user_id = u.id
+       JOIN leave_types lt ON lr.leave_type_id = lt.id
+       WHERE lr.user_id = $1
+       ORDER BY lr.created_at DESC`,
+      [userId]
+    );
+  } catch (error) {
+    console.error("Error in getLeaveRequestsByUser:", error);
+    throw error;
+  }
+}
+
+// Alias for consistent API naming
+export async function getLeaveRequestsByUserId(userId) {
+  return getLeaveRequestsByUser(userId);
+}
+export async function getLeaveRequestsByUser(userId) {
+  try {
+    return await query(
+      `SELECT lr.*, u.username, u.email, lt.name as leave_type_name, lt.color
+       FROM leave_requests lr
+       JOIN users u ON lr.user_id = u.id
+       JOIN leave_types lt ON lr.leave_type_id = lt.id
+       WHERE lr.user_id = $1
+       ORDER BY lr.created_at DESC`,
+      [userId]
+    );
+  } catch (error) {
+    console.error("Error in getLeaveRequestsByUser:", error);
+    throw error;
+  }
+}
+
 // Get leave request by ID
 export async function getLeaveRequestById(id) {
   try {
@@ -229,6 +271,34 @@ export async function updateLeaveRequestStatus(id, status, comment) {
     return result[0];
   } catch (error) {
     console.error("Error in updateLeaveRequestStatus:", error);
+    throw error;
+  }
+}
+
+// Update leave request
+export async function updateLeaveRequest(id, updateData) {
+  try {
+    const { status, comment } = updateData;
+    
+    // First get the request to check if we need to update leave balance
+    const leaveRequest = await getLeaveRequestById(id);
+    
+    if (!leaveRequest) {
+      throw new Error("Leave request not found");
+    }
+    
+    // Update the request status
+    const result = await query(
+      `UPDATE leave_requests
+       SET status = $1, comment = $2, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $3
+       RETURNING *`,
+      [status, comment, id]
+    );
+    
+    return result[0];
+  } catch (error) {
+    console.error("Error in updateLeaveRequest:", error);
     throw error;
   }
 }

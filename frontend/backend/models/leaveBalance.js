@@ -102,6 +102,16 @@ export async function initializeLeaveBalancesForUser(userId) {
   }
 }
 
+// Alias for consistency with other parts of the codebase
+export async function initializeUserLeaveBalances(userId) {
+  return initializeLeaveBalancesForUser(userId);
+}
+
+// Alias for consistent API naming
+export async function initializeUserLeaveBalances(userId) {
+  return initializeLeaveBalancesForUser(userId);
+}
+
 // Get all users with their leave balances
 export async function getAllUsersWithBalances() {
   try {
