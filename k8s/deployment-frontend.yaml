@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: frontend:v3
+        image: frontend:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 8080
