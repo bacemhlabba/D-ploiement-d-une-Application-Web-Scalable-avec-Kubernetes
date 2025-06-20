@@ -14,7 +14,7 @@ ENV SKIP_ENV_VALIDATION=1
 FROM base AS deps
 
 # Copy package files
-COPY package*.json ./
+COPY web-APP/package*.json ./
 
 # Install all dependencies including dev dependencies
 RUN npm install
@@ -27,7 +27,9 @@ FROM base AS builder
 
 # Copy installed dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+
+# Copy all files from web-APP directory
+COPY web-APP/ .
 
 # Create empty .env.local
 RUN touch .env.local
@@ -56,7 +58,7 @@ RUN mkdir -p /usr/share/nginx/html/_next/standalone
 COPY --from=builder /app/.next/standalone/ /usr/share/nginx/html/
 
 # Set up nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY web-APP/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD wget -q -O - http://localhost:8080/ || exit 1

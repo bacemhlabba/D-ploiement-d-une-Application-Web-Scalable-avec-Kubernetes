@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-scripts
+  namespace: scalable-app
+data:
+  init.sql: |
+    -- Create database tables and initial data
+    CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(100) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        role VARCHAR(50) DEFAULT 'employee',
+        first_name VARCHAR(100),
+        last_name VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS leave_types (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        days_allocated INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS leave_balances (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        leave_type_id INTEGER REFERENCES leave_types(id) ON DELETE CASCADE,
+        total_days INTEGER DEFAULT 0,
+        used_days INTEGER DEFAULT 0,
+        remaining_days INTEGER DEFAULT 0,
+        year INTEGER DEFAULT EXTRACT(YEAR FROM CURRENT_DATE),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, leave_type_id, year)
+    );
+
+    CREATE TABLE IF NOT EXISTS leave_requests (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        leave_type_id INTEGER REFERENCES leave_types(id) ON DELETE CASCADE,
+        start_date DATE NOT NULL,
+        end_date DATE NOT NULL,
+        days_requested INTEGER NOT NULL,
+        reason TEXT,
+        status VARCHAR(20) DEFAULT 'pending',
+        approved_by INTEGER REFERENCES users(id),
+        approved_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Insert default leave types
+    INSERT INTO leave_types (name, days_allocated) VALUES 
+        ('Annual Leave', 25),
+        ('Sick Leave', 10),
+        ('Personal Leave', 5),
+        ('Maternity Leave', 90),
+        ('Paternity Leave', 14)
+    ON CONFLICT DO NOTHING;
+
+    -- Insert default admin user (password: 'admin123')
+    INSERT INTO users (username, password, email, role, first_name, last_name) VALUES
+        ('admin', '$2b$10$rX8zl8U7C5XvQqQx.3t9EOx8pP7Y7J6xr5Sj.Cb5zl8U7C5XvQqQx', 'admin@company.com', 'admin', 'System', 'Administrator')
+    ON CONFLICT (username) DO NOTHING;
+
+    -- Create indexes for better performance
+    CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+    CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+    CREATE INDEX IF NOT EXISTS idx_leave_requests_user_id ON leave_requests(user_id);
+    CREATE INDEX IF NOT EXISTS idx_leave_requests_status ON leave_requests(status);
+    CREATE INDEX IF NOT EXISTS idx_leave_balances_user_id ON leave_balances(user_id);

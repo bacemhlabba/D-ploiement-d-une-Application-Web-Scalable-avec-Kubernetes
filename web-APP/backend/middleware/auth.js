@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { getUserById } from "../models/user"
+import { getUserById } from "../models/user.js"
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"
 
@@ -55,4 +55,20 @@ export function isHR(user) {
 
 export function isEmployee(user) {
   return user && user.role === "employee"
+}
+
+// Default export - Express middleware for authentication
+export default async function authMiddleware(req, res, next) {
+  try {
+    const user = await authenticateUser(req)
+
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" })
+    }
+
+    req.user = user
+    next()
+  } catch (error) {
+    return res.status(401).json({ error: "Authentication failed" })
+  }
 }

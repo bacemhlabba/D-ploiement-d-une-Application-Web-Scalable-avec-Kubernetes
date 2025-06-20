@@ -20,6 +20,7 @@
 - 🛠️ **API Middleware** : Implémentation des fonctions manquantes (withAuth, isHR, authenticateUser)
 - 🛠️ **Fonctions Manquantes** : Ajout de initializeUserLeaveBalances, getLeaveRequestsByUserId, updateLeaveRequest
 - 🛠️ **Build Process** : Désactivation de TypeScript et pnpm pour éviter les erreurs de build
+- 🛠️ **Fonctions Dupliquées** : Correction des déclarations de fonctions en double dans les modèles
 
 ## ✅ Terminé avec Succès
 

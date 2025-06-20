@@ -1,4 +1,4 @@
-import { query } from "../lib/db"
+import { query } from "../lib/db.js"
 
 export async function getAllLeaveTypes() {
   return await query("SELECT * FROM leave_types")

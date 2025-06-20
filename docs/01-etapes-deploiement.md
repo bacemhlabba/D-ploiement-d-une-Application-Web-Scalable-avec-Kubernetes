@@ -7,8 +7,8 @@
 
 2. **Builder et charger les images Docker**  
    ```bash
-   DOCKER_BUILDKIT=1 docker build --network=host -t frontend:latest frontend/
-   DOCKER_BUILDKIT=1 docker build --network=host -t backend:latest backend/
+   DOCKER_BUILDKIT=1 docker build --network=host -f web-APP/Dockerfile -t frontend:latest .
+   DOCKER_BUILDKIT=1 docker build --network=host -t backend:latest web-APP/backend/
    minikube image load frontend:latest
    minikube image load backend:latest
    ```

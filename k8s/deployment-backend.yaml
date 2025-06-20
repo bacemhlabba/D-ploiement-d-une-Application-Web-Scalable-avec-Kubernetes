@@ -5,6 +5,11 @@ metadata:
   namespace: scalable-app
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: backend
@@ -15,7 +20,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: backend:latest
+        image: backend:v3
         imagePullPolicy: Never
         env:
         - name: DB_HOST
@@ -39,15 +44,26 @@ spec:
               key: POSTGRES_DB
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "300m"
         readinessProbe:
           httpGet:
             path: /api/health
             port: 3000
           initialDelaySeconds: 10
           periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
         livenessProbe:
           httpGet:
             path: /api/health
             port: 3000
           initialDelaySeconds: 15
           periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 3

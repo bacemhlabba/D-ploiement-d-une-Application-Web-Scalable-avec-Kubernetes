@@ -2,13 +2,55 @@
 
 Une application web full-stack prête pour la production démontrant la conteneurisation avec Docker et l'orchestration avec Kubernetes, avec mise à l'échelle automatique, stockage de données persistant et automatisation complète du déploiement.
 
-## 🏗️ Architecture
+## � Objectif du Projet
+
+Déployer une application web composée de plusieurs services (frontend, backend, base de données) sur un cluster Kubernetes, en assurant la **scalabilité automatique**, la **tolérance aux pannes** et la **gestion du cycle de vie des conteneurs**.
+
+## �🏗️ Architecture
 
 - **Frontend**: Application React (servie par nginx, port 8080)
 - **Backend**: Serveur API Node.js avec vérifications de santé (port 3000) 
 - **Base de données**: PostgreSQL avec stockage persistant et StatefulSet
 - **Orchestration**: Kubernetes avec HPA (Horizontal Pod Autoscaler)
-- **Mise à l'échelle**: Auto-scaling basé sur l'utilisation CPU (seuil 50%, 2-10 répliques)
+- **Mise à l'échelle**: Auto-scaling basé sur l'utilisation CPU/mémoire
+
+### Schéma d'Architecture Détaillé
+Consultez [docs/02-architecture.md](docs/02-architecture.md) pour le diagramme complet et les spécifications techniques.
+
+## 📦 Livrables du Projet
+
+### ✅ Code Source
+- **Frontend**: Application React complète dans `web-APP/` avec composants UI modernes
+- **Backend**: API REST Node.js dans `web-APP/backend/` avec authentification et gestion des congés
+- **Base de données**: Scripts d'initialisation PostgreSQL dans `database/init-scripts/`
+
+### ✅ Dockerfiles
+- **Frontend**: `web-APP/Dockerfile` avec nginx et configuration proxy
+- **Backend**: `web-APP/backend/Dockerfile` optimisé pour production
+- **docker-compose.yml**: Configuration complète pour développement local
+
+### ✅ Fichiers YAML Kubernetes
+- **namespace.yaml**: Isolation des ressources
+- **deployment-frontend.yaml**: Déploiement frontend avec health checks
+- **deployment-backend.yaml**: Déploiement backend avec connexion DB
+- **statefulset-db.yaml**: Base de données PostgreSQL persistante
+- **service-*.yaml**: Services pour exposition des pods
+- **hpa-*.yaml**: Auto-scaling horizontal pour frontend et backend
+- **secret-db.yaml**: Gestion sécurisée des identifiants
+- **configmap-init-scripts.yaml**: Scripts d'initialisation DB
+- **ingress.yaml**: Routage du trafic externe
+
+### ✅ Documentation
+- **README.md**: Guide de démarrage rapide et vue d'ensemble
+- **docs/01-etapes-deploiement.md**: Instructions de déploiement détaillées
+- **docs/02-architecture.md**: Diagramme d'architecture et spécifications
+- **docs/TROUBLESHOOTING.md**: Guide de résolution des problèmes
+- **DEPLOYMENT_SUMMARY.md**: Résumé des mises à jour et corrections
+- **FINAL_STATUS.md**: État final et validation du déploiement
+
+### ✅ Captures d'écran
+- **docs/03-screenshots/step1-setup-minikube.png**: Configuration Minikube
+- **docs/03-screenshots/step2-get-pods.png**: État des pods déployés
 
 ## 🚀 Démarrage Rapide
 
@@ -24,15 +66,16 @@ Une application web full-stack prête pour la production démontrant la conteneu
 ./deploy.sh
 ```
 
-Ce script va :
-1. Démarrer le cluster Minikube
-2. Construire les images Docker avec une configuration réseau optimisée
-3. Charger les images dans l'environnement Minikube
-4. Déployer toutes les ressources Kubernetes avec isolation des espaces de noms
-5. Initialiser la base de données PostgreSQL avec le schéma
-6. Démarrer le port-forwarding persistant en arrière-plan avec nohup
-7. Vérifier que tous les pods sont sains et prêts
-8. Configurer le proxy nginx pour la communication frontend-backend
+Ce script automatisé va :
+1. ✅ Vérifier les prérequis (Docker, Minikube, kubectl)
+2. 🚀 Démarrer le cluster Minikube avec configuration optimisée
+3. 🔨 Construire les images Docker avec gestion d'erreurs
+4. 📦 Charger les images dans l'environnement Minikube
+5. 🏗️ Déployer toutes les ressources Kubernetes avec validation
+6. 🗄️ Initialiser la base de données PostgreSQL avec schéma complet
+7. ⏳ Attendre que tous les pods soient sains et prêts
+8. 🌐 Démarrer le port-forwarding persistant en arrière-plan
+9. 🏥 Vérifier la santé de tous les services déployés
 
 ### Accédez à Votre Application
 

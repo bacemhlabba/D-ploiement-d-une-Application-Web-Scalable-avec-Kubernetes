@@ -1,4 +1,4 @@
-import { query } from "../lib/db"
+import { query } from "../lib/db.js"
 import bcrypt from "bcryptjs"
 
 export async function getAllUsers() {
